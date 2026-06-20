@@ -1,0 +1,7 @@
+[
+  {
+    "source": "공공데이터베이스.pdf",
+    "chunk_id": 0,
+    "text": "PDF 텍스트 추출 실패: [Errno 2] No such file or directory: 'pdftotext'"
+  }
+]

@@ -1,0 +1,22 @@
+# 환경변수 (API 키 절대 올리면 안 됨)
+.env
+
+# 가상환경
+venv/
+__pycache__/
+*.pyc
+
+# DB 파일 (이력 데이터)
+history.db
+*.db
+
+# 진단 결과물
+output/
+*.xlsx
+*.pdf
+
+# 표준화 가이드 (저작권 문서)
+standards/*.pdf
+
+# OS
+.DS_Store
