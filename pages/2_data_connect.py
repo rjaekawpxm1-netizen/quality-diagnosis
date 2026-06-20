@@ -5,7 +5,12 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from core.connector import DataConnector
 
-st.title("🔌 데이터 연결")
+st.markdown("""
+<div style="margin-bottom:6px;">
+  <div style="color:#2e5aa8;font-size:12px;font-weight:700;letter-spacing:0.08em;">CONNECT · 준비 단계</div>
+</div>
+""", unsafe_allow_html=True)
+st.title("데이터 연결")
 st.markdown("품질진단을 수행할 대상 DB에 접속하거나, 분석할 데이터 파일을 업로드하세요.")
 
 if 'connector' not in st.session_state:

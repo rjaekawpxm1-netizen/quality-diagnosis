@@ -7,50 +7,40 @@ from core.query_builder import QueryBuilder
 
 
 # ══════════════════════════════════════════════
-#  CSS
+#  CSS (네이비 / 인스티튜셔널 팔레트)
 # ══════════════════════════════════════════════
 st.markdown("""
 <style>
-/* 페이지 전체 폰트 */
-html, body, [class*="css"] { font-family: 'Pretendard', 'Malgun Gothic', sans-serif; }
-
 /* 섹션 타이틀 */
 .section-title {
-    font-size: 18px; font-weight: 700;
-    color: #1a1a2e; margin: 20px 0 4px 0;
-    border-left: 4px solid #4F6BED;
-    padding-left: 10px;
+    font-size: 18px; font-weight: 800;
+    color: #16233d; margin: 20px 0 4px 0;
+    border-left: 4px solid #102a4c;
+    padding-left: 11px;
 }
 
 /* 타입 배지 */
 .badge {
     display: inline-block;
-    padding: 2px 9px; border-radius: 20px;
+    padding: 2px 9px; border-radius: 4px;
     font-size: 10px; font-weight: 700;
-    letter-spacing: 0.5px; color: #fff;
+    letter-spacing: 0.4px; color: #fff;
     margin-left: 5px; vertical-align: middle;
 }
-.badge-DATE    { background: #2196F3; }
-.badge-NUMBER  { background: #43A047; }
-.badge-TEXT    { background: #FB8C00; }
-.badge-UNKNOWN { background: #9E9E9E; }
+.badge-DATE    { background: #1f4e87; }
+.badge-NUMBER  { background: #2c7a6b; }
+.badge-TEXT    { background: #c0851e; }
+.badge-UNKNOWN { background: #5a6b8c; }
 
 /* 요약 카드 */
 .summary-card {
-    background: linear-gradient(135deg, #4F6BED 0%, #6B8CFF 100%);
-    border-radius: 12px; padding: 16px 24px;
+    background: linear-gradient(120deg, #0e2340 0%, #1c4f8f 100%);
+    border-radius: 6px; padding: 16px 24px;
     color: white; margin: 12px 0;
     display: flex; align-items: center; gap: 16px;
 }
 .summary-num { font-size: 32px; font-weight: 800; }
 .summary-label { font-size: 13px; opacity: 0.85; }
-
-/* 버튼 그룹 */
-div[data-testid="stButton"] button {
-    border-radius: 8px !important;
-    font-weight: 600 !important;
-    font-size: 13px !important;
-}
 
 /* data_editor 헤더 중앙 정렬 */
 div[data-testid="stDataFrame"] th {
@@ -63,12 +53,12 @@ div[data-testid="stDataFrame"] th {
 #  상수 정의
 # ══════════════════════════════════════════════
 DIMENSION_META = {
-    'completeness': {'label': '완전성', 'emoji': '🔵', 'color': '#2196F3'},
-    'consistency':  {'label': '일관성', 'emoji': '🟢', 'color': '#43A047'},
-    'accuracy':     {'label': '정확성', 'emoji': '🟠', 'color': '#FB8C00'},
-    'usefulness':   {'label': '유용성', 'emoji': '🟡', 'color': '#FDD835'},
-    'uniqueness':   {'label': '유일성', 'emoji': '🟣', 'color': '#8E24AA'},
-    'validity':     {'label': '유효성', 'emoji': '🔴', 'color': '#E53935'},
+    'completeness': {'label': '완전성', 'emoji': '🔵', 'color': '#1f4e87'},
+    'consistency':  {'label': '일관성', 'emoji': '🟢', 'color': '#2c7a6b'},
+    'accuracy':     {'label': '정확성', 'emoji': '🟠', 'color': '#c0851e'},
+    'usefulness':   {'label': '유용성', 'emoji': '🟡', 'color': '#5a6b8c'},
+    'uniqueness':   {'label': '유일성', 'emoji': '🟣', 'color': '#7a4a78'},
+    'validity':     {'label': '유효성', 'emoji': '🔴', 'color': '#b04a3e'},
 }
 
 RULE_SHORT_KR = {
@@ -184,9 +174,6 @@ if diag_mode == "다중 테이블 동시 진단" and len(selected_tables_list) >
 
 # ══════════════════════════════════════════════
 #  핵심: st.data_editor 기반 매트릭스
-#  - DataFrame을 session_state에 저장
-#  - 버튼은 DataFrame을 직접 수정 후 st.rerun()
-#  - data_editor는 저장된 DataFrame을 그대로 표시
 # ══════════════════════════════════════════════
 
 # DataFrame 컬럼 헤더 구성 (완전성-필수값누락 형식)

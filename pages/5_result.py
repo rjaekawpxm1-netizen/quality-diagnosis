@@ -3,7 +3,15 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-st.title("📈 진단 결과 분석")
+st.markdown("""
+<div style="margin-bottom:6px;">
+  <div style="color:#2e5aa8;font-size:12px;font-weight:700;letter-spacing:0.08em;">RESULT · 진단 단계</div>
+</div>
+""", unsafe_allow_html=True)
+st.title("진단 결과 분석")
+
+# 인스티튜셔널 팔레트 (6대 영역 카테고리 컬러)
+NAVY_SEQ = ['#2e5aa8', '#2c7a6b', '#c0851e', '#7a4a78', '#5a6b8c', '#b04a3e', '#1f4e87']
 
 if 'diagnosis_raw_results' not in st.session_state or not st.session_state.diagnosis_raw_results:
     st.warning("⚠️ 진단 결과가 없습니다. [4_diagnosis_run]에서 먼저 진단을 실행해주세요.")
@@ -69,6 +77,16 @@ for kor, _ in dim_keywords.items():
 dim_df = pd.DataFrame(dim_rows)
 st.dataframe(dim_df, use_container_width=True, hide_index=True)
 
+# 공통 plotly 레이아웃 (투명 배경 + Pretendard)
+def _style(fig, height=420):
+    fig.update_layout(
+        height=height,
+        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(family='Pretendard, sans-serif', color='#5b6678'),
+        xaxis=dict(gridcolor='#eef1f6'), yaxis=dict(gridcolor='#eef1f6'),
+    )
+    return fig
+
 # ── 3. 시각화 ─────────────────────────────────
 if not error_df.empty:
     st.divider()
@@ -81,11 +99,11 @@ if not error_df.empty:
             error_df.sort_values('오류 건수', ascending=False),
             x='컬럼명', y='오류 건수', color='진단 항목',
             text='오류 건수', title="컬럼별 오류 누적 현황",
-            color_discrete_sequence=px.colors.qualitative.Set2,
+            color_discrete_sequence=NAVY_SEQ,
         )
         fig1.update_traces(textposition='outside')
-        fig1.update_layout(showlegend=True, height=420)
-        st.plotly_chart(fig1, use_container_width=True)
+        fig1.update_layout(showlegend=True)
+        st.plotly_chart(_style(fig1), use_container_width=True)
 
     with tab_chart2:
         fig2 = px.bar(
@@ -93,11 +111,10 @@ if not error_df.empty:
             y='진단 항목', x='오류 건수', color='컬럼명',
             orientation='h', text='오류 건수',
             title="진단 항목별 오류 현황",
-            color_discrete_sequence=px.colors.qualitative.Pastel,
+            color_discrete_sequence=NAVY_SEQ,
         )
         fig2.update_traces(textposition='outside')
-        fig2.update_layout(height=420)
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(_style(fig2), use_container_width=True)
 
     with tab_chart3:
         # 영역별 오류율 레이더 차트
@@ -113,14 +130,16 @@ if not error_df.empty:
 
         fig3 = go.Figure(go.Scatterpolar(
             r=values_closed, theta=cats_closed,
-            fill='toself', fillcolor='rgba(79,107,237,0.2)',
-            line=dict(color='#4F6BED', width=2),
+            fill='toself', fillcolor='rgba(46,90,168,0.18)',
+            line=dict(color='#2e5aa8', width=2),
             name='오류율(%)'
         ))
         fig3.update_layout(
             polar=dict(radialaxis=dict(visible=True, range=[0, max(values + [1])])),
             title="품질 영역별 오류율 레이더",
             height=420,
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family='Pretendard, sans-serif', color='#5b6678'),
         )
         st.plotly_chart(fig3, use_container_width=True)
 

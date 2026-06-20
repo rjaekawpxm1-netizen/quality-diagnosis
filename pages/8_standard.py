@@ -10,16 +10,16 @@ from core.llm_advisor import recommend_column_standards, analyze_diagnosis_resul
 st.markdown("""
 <style>
 .ai-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 14px; padding: 22px 28px;
+    background: linear-gradient(120deg, #0e2340 0%, #143a6b 62%, #1c4f8f 100%);
+    border-radius: 8px; padding: 24px 30px;
     color: white; margin-bottom: 24px;
 }
-.ai-header h2 { margin: 0 0 4px 0; font-size: 22px; }
+.ai-header h2 { margin: 0 0 4px 0; font-size: 22px; font-weight: 800; letter-spacing:-0.02em; }
 .ai-header p  { margin: 0; opacity: 0.85; font-size: 13px; }
 
-.conf-high   { color: #43A047; font-weight: 700; }
-.conf-medium { color: #FB8C00; font-weight: 700; }
-.conf-low    { color: #E53935; font-weight: 700; }
+.conf-high   { color: #1f7a52; font-weight: 700; }
+.conf-medium { color: #c8821a; font-weight: 700; }
+.conf-low    { color: #b23b3b; font-weight: 700; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -158,7 +158,7 @@ with tab_col:
             st.markdown("#### ⚡ 규칙 기반 추천 결과")
 
             def color_conf(val):
-                c = {'high': '#E8F5E9', 'medium': '#FFF8E1', 'low': '#FFEBEE'}
+                c = {'high': '#e9f4ee', 'medium': '#fbf2e2', 'low': '#fbecec'}
                 return f"background-color: {c.get(val, '')}"
 
             st.dataframe(

@@ -8,12 +8,17 @@ from core.diagnosis_engine import DiagnosisEngine
 
 st.markdown("""
 <style>
-.result-pass { color: #43A047; font-weight: 700; }
-.result-fail { color: #E53935; font-weight: 700; }
+.result-pass { color: #1f7a52; font-weight: 700; }
+.result-fail { color: #b23b3b; font-weight: 700; }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("▶️ 진단 실행")
+st.markdown("""
+<div style="margin-bottom:6px;">
+  <div style="color:#2e5aa8;font-size:12px;font-weight:700;letter-spacing:0.08em;">RUN · 진단 단계</div>
+</div>
+""", unsafe_allow_html=True)
+st.title("진단 실행")
 
 if 'diagnosis_queries' not in st.session_state or not st.session_state.diagnosis_queries:
     st.warning("⚠️ [3_diagnosis_set]에서 진단 쿼리를 먼저 생성해주세요.")
@@ -106,14 +111,14 @@ def highlight_row(row):
 
     if total_col_idx >= 0 and row.iloc[total_col_idx] == -1:
         # 쿼리 실패 행 → 회색
-        return ['background-color: #f0f0f0; color: #999'] * len(row)
+        return ['background-color: #f0f2f6; color: #999'] * len(row)
 
     if err_col_idx >= 0:
         val = row.iloc[err_col_idx]
         if isinstance(val, (int, float)) and val > 0:
-            styles[err_col_idx]  = 'background-color: #FFEBEE; color: #C62828; font-weight:700'
+            styles[err_col_idx]  = 'background-color: #fbecec; color: #b23b3b; font-weight:700'
         if rate_col_idx >= 0:
-            styles[rate_col_idx] = 'background-color: #FFEBEE; color: #C62828; font-weight:700'
+            styles[rate_col_idx] = 'background-color: #fbecec; color: #b23b3b; font-weight:700'
     return styles
 
 st.dataframe(

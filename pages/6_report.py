@@ -7,7 +7,12 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from core.report_generator import ReportGenerator
 
 
-st.title("📄 보고서 출력")
+st.markdown("""
+<div style="margin-bottom:6px;">
+  <div style="color:#2e5aa8;font-size:12px;font-weight:700;letter-spacing:0.08em;">REPORT · 산출물</div>
+</div>
+""", unsafe_allow_html=True)
+st.title("보고서 출력")
 st.markdown("진단 결과를 **엑셀** 및 **PDF** 형식의 공식 보고서로 출력합니다.")
 
 # ──────────────────────────────────────────────
@@ -34,7 +39,7 @@ cp = st.session_state.get("current_project", {}) or {}
 col1, col2, col3 = st.columns([2, 2, 1])
 with col1:
     org_name     = st.text_input("기관명 *",  value=cp.get("org_name", ""),     placeholder="예) 행정안전부")
-    project_name = st.text_input("사업명 *",  value=cp.get("project_name", ""), placeholder="예) 2025 공공데이터 품질진단")
+    project_name = st.text_input("사업명 *",  value=cp.get("project_name", ""), placeholder="예) 2026 공공데이터 품질진단")
 with col2:
     manager      = st.text_input("담당자명",  value=cp.get("manager", ""),       placeholder="예) 홍길동")
     table_names = list({r.get("table", "") for r in raw_results if r.get("table")})

@@ -56,23 +56,23 @@ def _build_rule_based_erd(tables: dict, col_types_all: dict, show_types: bool) -
 
 
 # ══════════════════════════════════════════════
-#  페이지 설정
+#  페이지 설정 (네이비 / 인스티튜셔널 팔레트)
 # ══════════════════════════════════════════════
 
 st.markdown("""
 <style>
 .erd-header {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    border-radius: 14px; padding: 22px 28px;
+    background: linear-gradient(120deg, #0e2340 0%, #143a6b 62%, #1c4f8f 100%);
+    border-radius: 8px; padding: 24px 30px;
     color: white; margin-bottom: 24px;
 }
-.erd-header h2 { margin: 0 0 4px 0; font-size: 22px; }
-.erd-header p  { margin: 0; opacity: 0.8; font-size: 13px; }
+.erd-header h2 { margin: 0 0 4px 0; font-size: 22px; font-weight: 800; letter-spacing:-0.02em; }
+.erd-header p  { margin: 0; opacity: 0.82; font-size: 13px; }
 .rel-card {
-    border-left: 4px solid #4F6BED;
+    border-left: 4px solid #2e5aa8;
     padding: 8px 14px;
-    background: #f0f4ff;
-    border-radius: 0 8px 8px 0;
+    background: #eef3fb;
+    border-radius: 0 6px 6px 0;
     margin-bottom: 8px;
 }
 </style>
@@ -132,7 +132,7 @@ with st.spinner("테이블 구조를 읽는 중..."):
         tables_dict[t]   = connector.get_columns(t)
         col_types_all[t] = connector.get_column_types(t)
 
-TYPE_COLOR = {'DATE': '#2196F3', 'NUMBER': '#43A047', 'TEXT': '#FB8C00', 'UNKNOWN': '#9E9E9E'}
+TYPE_COLOR = {'DATE': '#1f4e87', 'NUMBER': '#2c7a6b', 'TEXT': '#c0851e', 'UNKNOWN': '#5a6b8c'}
 
 n_cols = 3
 rows   = [selected_tables[i:i+n_cols] for i in range(0, len(selected_tables), n_cols)]
@@ -145,7 +145,7 @@ for row in rows:
             with st.expander(f"**{table}** ({len(cols)}개 컬럼)", expanded=True):
                 for col in cols:
                     col_type  = types.get(col, 'UNKNOWN')
-                    color     = TYPE_COLOR.get(col_type, '#9E9E9E')
+                    color     = TYPE_COLOR.get(col_type, '#5a6b8c')
                     is_likely_pk = col.lower() in [
                         f"{table.lower()}_id", f"{table.lower()}_no",
                         f"{table.lower()}_seq", "id"
@@ -163,7 +163,7 @@ for row in rows:
                     st.markdown(
                         f"{icon} **{col}** "
                         f"<span style='background:{color};color:white;padding:1px 6px;"
-                        f"border-radius:8px;font-size:10px'>{col_type}</span>",
+                        f"border-radius:4px;font-size:10px'>{col_type}</span>",
                         unsafe_allow_html=True
                     )
 
@@ -235,13 +235,19 @@ with tab_preview:
 <html><head>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
 <style>
-  body {{ margin:0; background:white; display:flex; justify-content:center; padding:16px; }}
+  body {{ margin:0; background:white; display:flex; justify-content:center; padding:16px;
+         font-family:'Pretendard',sans-serif; }}
   .mermaid {{ max-width:100%; }}
 </style>
 </head><body>
 <div class="mermaid">{mermaid_code}</div>
 <script>mermaid.initialize({{
-  startOnLoad: true, theme: 'default',
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {{
+    primaryColor: '#eef3fb', primaryBorderColor: '#2e5aa8', primaryTextColor: '#16233d',
+    lineColor: '#5a6b8c', fontFamily: 'Pretendard, sans-serif'
+  }},
   er: {{ diagramPadding: 24, layoutDirection: 'TB', minEntityWidth: 120, minEntityHeight: 40 }}
 }});</script>
 </body></html>"""
@@ -312,7 +318,7 @@ with tab_rel:
             st.markdown(f"""
 <div class="rel-card">
   {conf_icon} <b>{rel.get('from_table','').upper()}</b>
-  <span style="color:#4F6BED"> ──{rel.get('type','')}──▶ </span>
+  <span style="color:#2e5aa8"> ──{rel.get('type','')}──▶ </span>
   <b>{rel.get('to_table','').upper()}</b>
   &nbsp;<span style="font-size:12px;color:#888">
     ({rel.get('from_col','')} → {rel.get('to_col','')})

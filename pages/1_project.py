@@ -4,8 +4,14 @@ import datetime
 import os
 
 
-st.title("📋 프로젝트 관리")
-st.markdown("품질진단 프로젝트를 생성하고, 기존 이력을 조회합니다.")
+# ── 페이지 헤더 (네이비 톤) ──
+st.markdown("""
+<div style="margin-bottom:6px;">
+  <div style="color:#2e5aa8;font-size:12px;font-weight:700;letter-spacing:0.08em;">PROJECT · 준비 단계</div>
+</div>
+""", unsafe_allow_html=True)
+st.title("프로젝트 관리")
+st.markdown("품질진단 프로젝트를 생성하고 기관별 진단 이력을 조회·비교합니다.")
 
 # ──────────────────────────────────────────────
 #  DB 초기화 (SQLite로 이력 관리)
@@ -123,7 +129,7 @@ with tab_new:
     col1, col2 = st.columns(2)
     with col1:
         org_name     = st.text_input("기관명 *", placeholder="예) 행정안전부")
-        project_name = st.text_input("사업명 *", placeholder="예) 2025 공공데이터 품질진단")
+        project_name = st.text_input("사업명 *", placeholder="예) 2026 공공데이터 품질진단")
     with col2:
         manager = st.text_input("담당자명", placeholder="예) 홍길동")
         st.write("")  # 여백
@@ -195,16 +201,13 @@ with tab_list:
                     hdf = pd.DataFrame(histories, columns=["테이블", "진단항목수", "오류항목수", "총오류건수", "진단일시"])
                     st.dataframe(hdf, use_container_width=True, hide_index=True)
 
-# ──────────────────────────────────────────────
-#  사이드바: 현재 선택된 프로젝트 표시
-# ──────────────────────────────────────────────
-
 
 # ── 탭3: 이력 비교 ────────────────────────────
 with tab_compare:
     st.subheader("품질진단 이력 비교")
     st.caption("기관별·프로젝트별 품질 점수 변화를 비교합니다.")
 
+    import pandas as pd
     try:
         con = sqlite3.connect(DB_PATH)
         # 전체 이력 조회
@@ -225,7 +228,7 @@ with tab_compare:
             st.info("아직 진단 이력이 없습니다. 보고서 출력 후 이력이 자동 저장됩니다.")
         else:
             hist_df = pd.DataFrame(rows, columns=[
-                '기관명','사업명','테이블','진단항목수','오류항목수','총오류건수','진단일시','품질점수'
+                '기관명', '사업명', '테이블', '진단항목수', '오류항목수', '총오류건수', '진단일시', '품질점수'
             ])
 
             # 요약 KPI
@@ -243,20 +246,27 @@ with tab_compare:
             if sel_org != '전체':
                 hist_df = hist_df[hist_df['기관명'] == sel_org]
 
-            # 품질 점수 트렌드 차트
+            # 품질 점수 트렌드 차트 (인스티튜셔널 블루 팔레트)
             if len(hist_df) > 1:
                 import plotly.express as px
+                navy_seq = ['#2e5aa8', '#2c7a6b', '#c0851e', '#7a4a78', '#5a6b8c', '#b04a3e']
                 fig = px.line(
                     hist_df.sort_values('진단일시'),
                     x='진단일시', y='품질점수',
                     color='기관명', markers=True,
                     title="기관별 품질 점수 추이",
                     labels={'품질점수': '품질 점수 (%)', '진단일시': '진단 일시'},
-                    color_discrete_sequence=px.colors.qualitative.Set2,
+                    color_discrete_sequence=navy_seq,
                 )
-                fig.update_layout(yaxis_range=[0, 100], height=350)
-                fig.add_hline(y=80, line_dash="dash", line_color="orange",
-                              annotation_text="기준선(80점)")
+                fig.update_layout(
+                    yaxis_range=[0, 100], height=350,
+                    paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+                    font=dict(family='Pretendard, sans-serif', color='#5b6678'),
+                    xaxis=dict(showgrid=False), yaxis=dict(gridcolor='#eef1f6'),
+                )
+                fig.add_hline(y=80, line_dash="dash", line_color="#e0b070",
+                              annotation_text="기준선(80점)",
+                              annotation_font=dict(color="#c8821a"))
                 st.plotly_chart(fig, use_container_width=True)
 
             # 이력 테이블
@@ -264,9 +274,9 @@ with tab_compare:
 
             def color_score(val):
                 if isinstance(val, float):
-                    if val >= 90: return 'background-color: #E8F5E9; color: #2E7D32'
-                    elif val >= 70: return 'background-color: #FFF8E1; color: #F57F17'
-                    else: return 'background-color: #FFEBEE; color: #C62828'
+                    if val >= 90: return 'background-color: #e9f4ee; color: #1f7a52'
+                    elif val >= 70: return 'background-color: #fbf2e2; color: #c8821a'
+                    else: return 'background-color: #fbecec; color: #b23b3b'
                 return ''
 
             st.dataframe(
